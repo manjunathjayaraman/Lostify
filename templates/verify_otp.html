@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - Lostify</title>
+    <style>
+        body{
+            margin:0;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#6a3dad,#9966cc);
+            font-family:Arial,sans-serif;
+            padding:20px;
+        }
+        .card{
+            width:100%;
+            max-width:400px;
+            background:rgba(255,250,205,0.96);
+            padding:40px;
+            border-radius:18px;
+            text-align:center;
+            box-shadow:0 25px 60px rgba(0,0,0,0.3);
+        }
+        input{
+            width:100%;
+            padding:12px;
+            margin:12px 0;
+            border-radius:10px;
+            border:1px solid #ddd;
+            font-size:14px;
+            box-sizing:border-box;
+        }
+        button{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#9966cc;
+            color:white;
+            font-size:15px;
+            cursor:pointer;
+        }
+        button:hover{
+            background:#6a3dad;
+        }
+        .msg{
+            margin-top:12px;
+            font-size:14px;
+        }
+        .error{ color:red; }
+        .success{ color:green; }
+        a{
+            display:inline-block;
+            margin-top:14px;
+            color:#6a3dad;
+            text-decoration:none;
+            font-weight:600;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Verify OTP</h2>
+        <p>Enter the OTP sent to your Gmail</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="otp" placeholder="Enter 6-digit OTP" required>
+            <button type="submit">Verify OTP</button>
+        </form>
+
+        {% if error %}
+            <div class="msg error">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+            <div class="msg success">{{ success }}</div>
+        {% endif %}
+
+        <a href="/resend-otp/">Resend OTP</a>
+    </div>
+</body>
+</html>

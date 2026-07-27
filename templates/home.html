@@ -1,0 +1,414 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lostify</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background-color:#FFFACD;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        .navbar{
+            background:#7851A9;
+            padding:15px 0;
+        }
+
+        .navbar-brand img{
+            width:150px;
+        }
+
+        .nav-link{
+            color:white !important;
+            font-weight:500;
+            margin-right:20px;
+            font-size:18px;
+        }
+
+        .nav-link:hover{
+            color:#FFFACD !important;
+        }
+
+        .login-btn{
+            background:white;
+            color:#7851A9;
+            border-radius:25px;
+            font-weight:600;
+            padding:8px 20px;
+            text-decoration:none;
+            border:none;
+        }
+
+        .login-btn:hover{
+            background:#FFFACD;
+            color:#7851A9;
+        }
+
+        .hero{
+            height:80vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+        }
+
+        .hero h1{
+            font-size:60px;
+            font-weight:700;
+            color:#7851A9;
+        }
+
+        .hero p{
+            font-size:22px;
+            margin-top:10px;
+            color:#333;
+        }
+
+        .action-btn{
+            margin-top:25px;
+            padding:12px 25px;
+            border-radius:30px;
+            font-size:18px;
+            margin-right:10px;
+        }
+
+        .features{
+            margin-top:70px;
+            margin-bottom:60px;
+        }
+
+        .card{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-title{
+            color:#7851A9;
+            font-weight:600;
+        }
+
+        footer{
+            margin-top:80px;
+            background:#7851A9;
+            color:white;
+            padding:20px;
+            text-align:center;
+        }
+
+        .loading-overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(120,81,169,0.30);
+            backdrop-filter:blur(6px);
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            z-index:9999;
+            opacity:0;
+            visibility:hidden;
+            transition:0.25s ease;
+        }
+
+        .loading-overlay.show{
+            opacity:1;
+            visibility:visible;
+        }
+
+        .apple-spinner{
+            width:55px;
+            height:55px;
+            border:4px solid rgba(255,255,255,0.35);
+            border-top:4px solid white;
+            border-radius:50%;
+            animation:spin 0.8s linear infinite;
+            box-shadow:0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .loading-text{
+            margin-top:16px;
+            color:white;
+            font-size:15px;
+            font-weight:600;
+            letter-spacing:0.3px;
+        }
+
+        @keyframes spin{
+            0%{ transform:rotate(0deg); }
+            100%{ transform:rotate(360deg); }
+        }
+
+        .toast-container-custom{
+            position:fixed;
+            top:20px;
+            right:20px;
+            z-index:10000;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+        }
+
+        .custom-toast{
+            min-width:340px;
+            max-width:420px;
+            background:#ffffff;
+            border-left:6px solid #2e7d32;
+            border-radius:14px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.18);
+            display:flex;
+            align-items:flex-start;
+            padding:16px 18px;
+            gap:12px;
+            opacity:0;
+            transform:translateX(30px);
+            transition:all 0.4s ease;
+        }
+
+        .custom-toast.show-toast{
+            opacity:1;
+            transform:translateX(0);
+        }
+
+        .toast-icon{
+            width:32px;
+            height:32px;
+            border-radius:50%;
+            background:#2e7d32;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+            font-size:16px;
+            flex-shrink:0;
+        }
+
+        .toast-content{
+            flex:1;
+        }
+
+        .toast-title{
+            font-size:15px;
+            font-weight:700;
+            color:#1f1f1f;
+            margin-bottom:4px;
+        }
+
+        .toast-message{
+            font-size:14px;
+            color:#555;
+            line-height:1.5;
+        }
+
+        .toast-close{
+            background:none;
+            border:none;
+            font-size:22px;
+            line-height:1;
+            color:#777;
+            cursor:pointer;
+            padding:0;
+        }
+
+        .toast-close:hover{
+            color:#222;
+        }
+
+        .hide-toast{
+            opacity:0 !important;
+            transform:translateX(30px) !important;
+        }
+
+        @media(max-width:576px){
+            .toast-container-custom{
+                right:10px;
+                left:10px;
+                top:10px;
+            }
+
+            .custom-toast{
+                min-width:auto;
+                width:100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'media/logo.png' %}" alt="Logo">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu" aria-controls="navmenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto align-items-center">
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'find_items' %}">Search</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'report_lost' %}">Report</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showLoginWarning()">Search</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showLoginWarning()">Report</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'help' %}">Help</a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+
+                    <ul class="dropdown-menu">
+                       <a class="dropdown-item" href="{% url 'my_profile' %}">My Profile</a>
+                        <li><a class="dropdown-item" href="{% url 'my_status' %}">My Status</a></li>
+                        <li><a class="dropdown-item" href="{% url 'find_items' %}">Find Lost Items</a></li>
+                        <li><a class="dropdown-item" href="{% url 'help' %}">Help</a></li>
+                        <li><a class="dropdown-item" href="{% url 'contact_us' %}">Contact Us</a></li>
+                        <li><a class="dropdown-item" href="{% url 'settings' %}">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}" id="logoutBtn">Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn login-btn" href="{% url 'login' %}">Login</a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="toast-container-custom" id="toastContainer">
+    {% for message in messages %}
+    <div class="custom-toast show-toast">
+        <div class="toast-icon">✓</div>
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message">{{ message }}</div>
+        </div>
+        <button class="toast-close" onclick="closeToast(this)">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<section class="hero">
+    <div class="container">
+        <h1>Lost Something?</h1>
+        <p><b>Connect what's lost to who it belongs</b></p>
+
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary action-btn" href="{% url 'report_lost' %}">Report Lost Item</a>
+            <a class="btn btn-outline-dark action-btn" href="{% url 'report_found' %}">Report Found Item</a>
+        {% else %}
+            <a class="btn btn-primary action-btn" href="#" onclick="showLoginWarning()">Report Lost Item</a>
+            <a class="btn btn-outline-dark action-btn" href="#" onclick="showLoginWarning()">Report Found Item</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="features container">
+    <div class="row text-center g-4">
+
+        <div class="col-md-4">
+            <div class="card p-4 h-100">
+                <h5 class="card-title">Report Lost</h5>
+                <p>Users can report lost items with image, location and description.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-4 h-100">
+                <h5 class="card-title">Report Found</h5>
+                <p>Found an item? Upload it so the rightful owner can find it.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-4 h-100">
+                <h5 class="card-title">Connect People</h5>
+                <p>Lostify connects lost items back to their rightful owners.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Lostify | Connect what's lost to who it belongs</p>
+</footer>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="apple-spinner"></div>
+    <div class="loading-text" id="loadingText">Logging out...</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+    const loadingText = document.getElementById("loadingText");
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function() {
+            loadingText.innerText = "Logging out...";
+            loadingOverlay.classList.add("show");
+        });
+    }
+
+    function closeToast(button) {
+        const toast = button.parentElement;
+        toast.classList.add("hide-toast");
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
+    }
+
+    function showLoginWarning() {
+        alert("Please login first");
+    }
+
+    window.addEventListener("load", function() {
+        const toasts = document.querySelectorAll(".custom-toast");
+        toasts.forEach((toast) => {
+            setTimeout(() => {
+                toast.classList.add("hide-toast");
+                setTimeout(() => {
+                    toast.remove();
+                }, 400);
+            }, 5000);
+        });
+    });
+</script>
+
+</body>
+</html>

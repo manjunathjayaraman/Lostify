@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Found Item - Lostify</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <style>
+        body{
+            margin:0;
+            font-family:'Segoe UI',sans-serif;
+            background:#FFFACD;
+            color:#333;
+        }
+
+        .container{
+            width:90%;
+            max-width:1000px;
+            margin:40px auto;
+        }
+
+        .form-card{
+            background:#fffdf2;
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+            padding:35px;
+        }
+
+        h1{
+            color:#7851A9;
+            text-align:center;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            margin-bottom:30px;
+            color:#555;
+        }
+
+        .section-title{
+            margin-top:30px;
+            margin-bottom:15px;
+            color:#7851A9;
+            font-size:22px;
+            font-weight:700;
+            border-bottom:2px solid #eee;
+            padding-bottom:8px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:18px;
+        }
+
+        .field{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .field.full{
+            grid-column:1 / -1;
+        }
+
+        label{
+            font-weight:600;
+            margin-bottom:7px;
+            color:#444;
+        }
+
+        input, select, textarea{
+            padding:12px;
+            border:1px solid #d8d8d8;
+            border-radius:10px;
+            font-size:15px;
+            background:white;
+            outline:none;
+        }
+
+        input:focus, select:focus, textarea:focus{
+            border-color:#7851A9;
+            box-shadow:0 0 0 3px rgba(120,81,169,0.12);
+        }
+
+        textarea{
+            resize:vertical;
+            min-height:110px;
+        }
+
+        #map{
+            height:350px;
+            width:100%;
+            border-radius:14px;
+            overflow:hidden;
+            margin-top:10px;
+            border:1px solid #ddd;
+        }
+
+        .hint{
+            font-size:13px;
+            color:#666;
+            margin-top:5px;
+        }
+
+        .btn{
+            background:#7851A9;
+            color:white;
+            border:none;
+            padding:14px 24px;
+            border-radius:12px;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:600;
+            margin-top:25px;
+        }
+
+        .btn:hover{
+            background:#633d92;
+        }
+
+        .notice{
+            background:#f4ecff;
+            color:#5a338c;
+            border-left:4px solid #7851A9;
+            padding:14px;
+            border-radius:10px;
+            margin-bottom:22px;
+        }
+
+        .map-search-wrap{
+            display:flex;
+            gap:10px;
+            margin-top:10px;
+            margin-bottom:10px;
+        }
+
+        .map-search-wrap input{
+            flex:1;
+            margin:0;
+        }
+
+        .search-btn{
+            background:#7851A9;
+            color:white;
+            border:none;
+            padding:12px 18px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .search-btn:hover{
+            background:#633d92;
+        }
+
+        .search-status{
+            margin-top:8px;
+            font-size:14px;
+            color:#555;
+        }
+
+        @media(max-width:768px){
+            .grid{
+                grid-template-columns:1fr;
+            }
+
+            .map-search-wrap{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-card">
+        <h1>Report Found Item</h1>
+        <p class="subtitle">Enter the found item details clearly so Lostify can help identify the rightful owner.</p>
+
+        <div class="notice">
+            Add clear information like image, serial number, IMEI, color, brand, and exact found location. Contact details will only be shared after a confirmed match and the waiting period.
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="section-title">Item Information</div>
+            <div class="grid">
+                <div class="field">
+                    <label>Item Title</label>
+                    <input type="text" name="title" placeholder="Example: Samsung Galaxy Phone" required>
+                </div>
+
+                <div class="field">
+                    <label>Category</label>
+                    <select name="category" id="category" required>
+                        <option value="">Select category</option>
+                        <option value="mobile">Mobile Phone</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="tablet">Tablet</option>
+                        <option value="earbuds">Earbuds / Headphones</option>
+                        <option value="watch">Watch / Smartwatch</option>
+                        <option value="wallet">Wallet / Purse</option>
+                        <option value="bag">Bag</option>
+                        <option value="id_card">ID Card / Certificate</option>
+                        <option value="keys">Keys</option>
+                        <option value="jewellery">Jewellery</option>
+                        <option value="vehicle">Vehicle</option>
+                        <option value="document">Document</option>
+                        <option value="electronics">Other Electronics</option>
+                        <option value="other">Other Item</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Brand</label>
+                    <input type="text" name="brand" placeholder="Apple, Samsung, Dell...">
+                </div>
+
+                <div class="field">
+                    <label>Model</label>
+                    <input type="text" name="model" placeholder="Optional">
+                </div>
+
+                <div class="field">
+                    <label>Color</label>
+                    <input type="text" name="color" placeholder="Black, Blue, Silver...">
+                </div>
+
+                <div class="field" id="imeiField">
+                    <label>IMEI Number</label>
+                    <input type="text" name="imei_number" placeholder="If available">
+                </div>
+
+                <div class="field" id="serialField">
+                    <label>Serial Number</label>
+                    <input type="text" name="serial_number" placeholder="If available">
+                </div>
+
+                <div class="field" id="vehicleField">
+                    <label>Vehicle Registration Number</label>
+                    <input type="text" name="vehicle_number" placeholder="If available">
+                </div>
+
+                <div class="field full">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Mention cover, scratches, stickers, wallpaper, unique marks, contents, accessories, and other details." required></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Found Item Photo</label>
+                    <input type="file" name="item_image" accept="image/*">
+                    <div class="hint">Upload a clear photo of the found item.</div>
+                </div>
+            </div>
+
+            <div class="section-title">Found Details</div>
+            <div class="grid">
+                <div class="field">
+                    <label>Date Found</label>
+                    <input type="date" name="found_date" required>
+                </div>
+
+                <div class="field">
+                    <label>Approximate Time Found</label>
+                    <input type="time" name="found_time">
+                </div>
+
+                <div class="field full">
+                    <label>Place / Area Description</label>
+                    <input type="text" name="found_place_text" id="found_place_text" placeholder="Example: Near railway station entrance, Whitefield" required>
+                </div>
+
+                <div class="field full">
+                    <label>Search Location</label>
+                    <div class="map-search-wrap">
+                        <input type="text" id="locationSearch" placeholder="Search place name, area, city...">
+                        <button type="button" class="search-btn" onclick="searchLocation()">Search</button>
+                    </div>
+                    <div class="search-status" id="searchStatus"></div>
+                </div>
+
+                <div class="field full">
+                    <label>Select Found Location on Map</label>
+                    <div id="map"></div>
+                    <div class="hint">Search a place or click on the map to mark where you found the item.</div>
+                </div>
+
+                <div class="field">
+                    <label>Latitude</label>
+                    <input type="text" id="latitude" name="latitude" readonly>
+                </div>
+
+                <div class="field">
+                    <label>Longitude</label>
+                    <input type="text" id="longitude" name="longitude" readonly>
+                </div>
+            </div>
+
+            <div class="section-title">Finder Contact Details</div>
+            <div class="grid">
+                <div class="field">
+                    <label>Your Name</label>
+                    <input type="text" name="finder_name" required>
+                </div>
+
+                <div class="field">
+                    <label>Your Phone Number</label>
+                    <input type="text" name="finder_phone" required>
+                </div>
+
+                <div class="field">
+                    <label>Your Email</label>
+                    <input type="email" name="finder_email" required>
+                </div>
+
+                <div class="field full">
+                    <label>Additional Notes</label>
+                    <textarea name="extra_notes" placeholder="Optional notes for verification or safe return"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Submit Found Report</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([12.9716, 77.5946], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker;
+
+    function setMarker(lat, lng, labelText = "") {
+        document.getElementById('latitude').value = Number(lat).toFixed(6);
+        document.getElementById('longitude').value = Number(lng).toFixed(6);
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+
+        if (labelText) {
+            marker.bindPopup(labelText).openPopup();
+        }
+
+        map.setView([lat, lng], 15);
+    }
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        setMarker(lat, lng, "Selected location");
+    });
+
+    async function searchLocation() {
+        const query = document.getElementById("locationSearch").value.trim();
+        const searchStatus = document.getElementById("searchStatus");
+
+        if (!query) {
+            searchStatus.innerText = "Please enter a location to search.";
+            return;
+        }
+
+        searchStatus.innerText = "Searching...";
+
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            if (data.length > 0) {
+                const place = data[0];
+                const lat = parseFloat(place.lat);
+                const lng = parseFloat(place.lon);
+
+                setMarker(lat, lng, place.display_name);
+                document.getElementById("found_place_text").value = place.display_name;
+                searchStatus.innerText = "Location found and pinned on map.";
+            } else {
+                searchStatus.innerText = "Location not found. Try a different search.";
+            }
+        } catch (error) {
+            searchStatus.innerText = "Something went wrong while searching location.";
+            console.error(error);
+        }
+    }
+
+    const category = document.getElementById("category");
+    const imeiField = document.getElementById("imeiField");
+    const serialField = document.getElementById("serialField");
+    const vehicleField = document.getElementById("vehicleField");
+
+    function toggleFields() {
+        const value = category.value;
+
+        imeiField.style.display = "none";
+        serialField.style.display = "none";
+        vehicleField.style.display = "none";
+
+        if (value === "mobile") {
+            imeiField.style.display = "flex";
+            serialField.style.display = "flex";
+        } else if (value === "laptop" || value === "tablet" || value === "electronics" || value === "watch" || value === "earbuds") {
+            serialField.style.display = "flex";
+        } else if (value === "vehicle") {
+            vehicleField.style.display = "flex";
+            serialField.style.display = "flex";
+        }
+    }
+
+    category.addEventListener("change", toggleFields);
+    toggleFields();
+
+    document.getElementById("locationSearch").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            searchLocation();
+        }
+    });
+</script>
+
+</body>
+</html>

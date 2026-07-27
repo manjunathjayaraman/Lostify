@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - Lostify</title>
+    <style>
+        :root{
+            --amethyst:#9966cc;
+            --amethyst-dark:#6a3dad;
+            --lemon:#fffacd;
+            --white:#ffffff;
+            --text:#333;
+            --soft:#f8f4d7;
+            --border:#e8ddaa;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        }
+
+        body{
+            background:linear-gradient(135deg,var(--amethyst-dark),var(--amethyst));
+            min-height:100vh;
+            color:var(--text);
+        }
+
+        .container{
+            width:90%;
+            max-width:1100px;
+            margin:40px auto;
+        }
+
+        .hero{
+            background:rgba(255,250,205,0.97);
+            border-radius:22px;
+            padding:40px 30px;
+            text-align:center;
+            box-shadow:0 20px 50px rgba(0,0,0,0.25);
+            margin-bottom:30px;
+        }
+
+        .hero h1{
+            font-size:38px;
+            color:var(--amethyst-dark);
+            margin-bottom:12px;
+        }
+
+        .hero p{
+            font-size:16px;
+            color:#555;
+            max-width:700px;
+            margin:0 auto 25px;
+            line-height:1.6;
+        }
+
+        .search-box{
+            max-width:600px;
+            margin:0 auto;
+        }
+
+        .search-box input{
+            width:100%;
+            padding:15px 18px;
+            border-radius:12px;
+            border:1px solid #ddd;
+            outline:none;
+            font-size:15px;
+            background:var(--white);
+        }
+
+        .section-title{
+            color:var(--white);
+            font-size:26px;
+            font-weight:700;
+            margin:28px 0 16px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:rgba(255,250,205,0.97);
+            border-radius:18px;
+            padding:24px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.18);
+            transition:transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 18px 35px rgba(0,0,0,0.22);
+        }
+
+        .card h3{
+            color:var(--amethyst-dark);
+            margin-bottom:10px;
+            font-size:20px;
+        }
+
+        .card p{
+            color:#555;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        .faq-wrap{
+            display:grid;
+            gap:15px;
+        }
+
+        .faq-item{
+            background:rgba(255,250,205,0.97);
+            border-radius:16px;
+            overflow:hidden;
+            box-shadow:0 10px 25px rgba(0,0,0,0.16);
+        }
+
+        .faq-question{
+            width:100%;
+            background:none;
+            border:none;
+            outline:none;
+            text-align:left;
+            padding:18px 20px;
+            font-size:16px;
+            font-weight:600;
+            color:var(--amethyst-dark);
+            cursor:pointer;
+        }
+
+        .faq-answer{
+            display:none;
+            padding:0 20px 18px;
+            color:#555;
+            font-size:14px;
+            line-height:1.7;
+        }
+
+        .quick-links{
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+            margin-top:16px;
+        }
+
+        .quick-links a{
+            text-decoration:none;
+            background:var(--lemon);
+            color:var(--amethyst-dark);
+            padding:10px 16px;
+            border-radius:999px;
+            font-size:14px;
+            font-weight:600;
+            border:1px solid var(--border);
+            transition:0.25s;
+        }
+
+        .quick-links a:hover{
+            background:var(--white);
+        }
+
+        .steps{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:18px;
+        }
+
+        .step{
+            background:rgba(255,250,205,0.97);
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .step-number{
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            background:var(--amethyst);
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+            margin-bottom:12px;
+        }
+
+        .step h4{
+            color:var(--amethyst-dark);
+            margin-bottom:10px;
+            font-size:18px;
+        }
+
+        .step p{
+            font-size:14px;
+            color:#555;
+            line-height:1.6;
+        }
+
+        .tips{
+            background:rgba(255,250,205,0.97);
+            border-radius:18px;
+            padding:24px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .tips ul{
+            padding-left:20px;
+            margin-top:10px;
+        }
+
+        .tips li{
+            margin-bottom:10px;
+            color:#555;
+            line-height:1.6;
+        }
+
+        .footer-note{
+            text-align:center;
+            color:var(--white);
+            margin:28px 0 10px;
+            font-size:14px;
+            opacity:0.95;
+        }
+
+        @media (max-width:768px){
+            .hero h1{
+                font-size:30px;
+            }
+
+            .hero{
+                padding:30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="hero">
+            <h1>Help Center</h1>
+            <p>
+                Welcome to Lostify Help Center. Here you can learn how to report lost items,
+                upload found items, verify accounts, track status, and use the platform easily.
+            </p>
+            <div class="search-box">
+                <input type="text" placeholder="Search help topics...">
+            </div>
+            <div class="quick-links">
+                <a href="#getting-started">Getting Started</a>
+                <a href="#features">Features</a>
+                <a href="#faq">FAQ</a>
+                <a href="#tips">Safety Tips</a>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="getting-started">Getting Started</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Create an Account</h4>
+                <p>Register using your Gmail and verify your account with OTP to access all Lostify features.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Report a Lost Item</h4>
+                <p>Enter item details like title, category, color, location, date, and image to help others identify it easily.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Report a Found Item</h4>
+                <p>If you found an item, upload the details so the rightful owner can search and claim it.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h4>Track Status</h4>
+                <p>Go to My Status to monitor your submitted reports, matches, and claim progress.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="features">Main Features</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Lost Item Reporting</h3>
+                <p>Submit detailed reports for lost items with date, time, place, contact details, and proof of ownership.</p>
+            </div>
+            <div class="card">
+                <h3>Found Item Upload</h3>
+                <p>Users can upload found items with clear descriptions and images so others can locate their belongings.</p>
+            </div>
+            <div class="card">
+                <h3>Smart Search</h3>
+                <p>Search items by title, category, brand, model, color, and location to quickly find possible matches.</p>
+            </div>
+            <div class="card">
+                <h3>Google Login</h3>
+                <p>Users can sign in quickly using their Google account for faster and easier access.</p>
+            </div>
+            <div class="card">
+                <h3>OTP Verification</h3>
+                <p>Gmail-based OTP verification helps confirm users before they create a new account.</p>
+            </div>
+            <div class="card">
+                <h3>Status Tracking</h3>
+                <p>Track all your lost reports, found reports, claim requests, and item matches in one place.</p>
+            </div>
+            <div class="card">
+                <h3>Item Matching</h3>
+                <p>Lostify helps compare lost and found reports to improve the chance of reconnecting items with owners.</p>
+            </div>
+            <div class="card">
+                <h3>Image Upload</h3>
+                <p>Users can upload item photos to improve identification and increase the chances of successful recovery.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="faq">Frequently Asked Questions</h2>
+        <div class="faq-wrap">
+            <div class="faq-item">
+                <button class="faq-question">How do I report a lost item?</button>
+                <div class="faq-answer">
+                    Go to the Report Lost Item page, fill in the form with complete details, upload an image if available, and submit it.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">How do I search for my lost item?</button>
+                <div class="faq-answer">
+                    Open the Find Items page and use keywords such as item name, category, color, place, or brand to search matching found items.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">What happens after I submit a found item?</button>
+                <div class="faq-answer">
+                    The found item becomes visible in the system, and users searching for similar items may identify and claim it.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">Can I use Google Login instead of manual registration?</button>
+                <div class="faq-answer">
+                    Yes. You can sign in using your Google account if Google Login is enabled correctly in the project.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">Where can I check my submitted reports?</button>
+                <div class="faq-answer">
+                    Open the My Status page to view all submitted lost items, found items, and matched results.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">Why is OTP verification needed?</button>
+                <div class="faq-answer">
+                    OTP verification helps confirm that the email belongs to the actual user before completing account registration.
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title" id="tips">Safety Tips</h2>
+        <div class="tips">
+            <ul>
+                <li>Always provide accurate item details and avoid fake claims.</li>
+                <li>Upload clear images whenever possible for better identification.</li>
+                <li>Do not share unnecessary personal details in public descriptions.</li>
+                <li>Double-check item category, location, and date before submitting a report.</li>
+                <li>Use My Status regularly to monitor new matches and updates.</li>
+                <li>Keep your login credentials safe and use verified email access.</li>
+            </ul>
+        </div>
+
+        <div class="footer-note">
+            Lostify Help Center • Easy guidance for using the platform
+        </div>
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll(".faq-question");
+
+        questions.forEach(button => {
+            button.addEventListener("click", () => {
+                const answer = button.nextElementSibling;
+                const isVisible = answer.style.display === "block";
+
+                document.querySelectorAll(".faq-answer").forEach(item => {
+                    item.style.display = "none";
+                });
+
+                if (!isVisible) {
+                    answer.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

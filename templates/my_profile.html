@@ -1,0 +1,551 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Lostify</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --amethyst:#7851A9;
+            --amethyst-dark:#5f3b87;
+            --lemon:#FFFACD;
+            --white:#ffffff;
+            --text:#333;
+            --soft:#fff7cc;
+            --border:#eadf9b;
+            --success:#2e7d32;
+        }
+
+        *{
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            margin:0;
+            background:linear-gradient(135deg,var(--amethyst-dark),var(--amethyst));
+            min-height:100vh;
+            color:var(--text);
+        }
+
+        .page-wrap{
+            width:92%;
+            max-width:1200px;
+            margin:40px auto;
+        }
+
+        .profile-header{
+            background:rgba(255,250,205,0.97);
+            border-radius:26px;
+            padding:32px;
+            box-shadow:0 18px 45px rgba(0,0,0,0.20);
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            margin-bottom:28px;
+            flex-wrap:wrap;
+        }
+
+        .profile-main{
+            display:flex;
+            align-items:center;
+            gap:22px;
+            flex-wrap:wrap;
+        }
+
+        .profile-avatar{
+            width:110px;
+            height:110px;
+            border-radius:50%;
+            background:linear-gradient(135deg,var(--amethyst),#9a79c8);
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:38px;
+            font-weight:700;
+            box-shadow:0 8px 20px rgba(0,0,0,0.16);
+            overflow:hidden;
+        }
+
+        .profile-avatar img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .profile-info h1{
+            margin:0 0 6px;
+            color:var(--amethyst);
+            font-size:34px;
+            font-weight:700;
+        }
+
+        .profile-info p{
+            margin:4px 0;
+            color:#555;
+            font-size:15px;
+        }
+
+        .badge-soft{
+            display:inline-block;
+            margin-top:10px;
+            background:var(--white);
+            color:var(--amethyst);
+            border:1px solid var(--border);
+            padding:8px 14px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        .header-actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .action-btn{
+            border:none;
+            border-radius:30px;
+            padding:12px 20px;
+            font-size:14px;
+            font-weight:600;
+            text-decoration:none;
+            transition:0.25s;
+            cursor:pointer;
+            display:inline-block;
+        }
+
+        .primary-btn{
+            background:var(--amethyst);
+            color:white;
+        }
+
+        .primary-btn:hover{
+            background:var(--amethyst-dark);
+            color:white;
+        }
+
+        .secondary-btn{
+            background:var(--white);
+            color:var(--amethyst);
+            border:1px solid var(--border);
+        }
+
+        .secondary-btn:hover{
+            background:var(--soft);
+            color:var(--amethyst);
+        }
+
+        .profile-grid{
+            display:grid;
+            grid-template-columns:1.2fr 0.8fr;
+            gap:24px;
+        }
+
+        .left-col,
+        .right-col{
+            display:grid;
+            gap:24px;
+        }
+
+        .card-box{
+            background:rgba(255,250,205,0.97);
+            border-radius:22px;
+            padding:26px;
+            box-shadow:0 14px 35px rgba(0,0,0,0.17);
+        }
+
+        .card-title{
+            color:var(--amethyst);
+            font-size:22px;
+            font-weight:700;
+            margin-bottom:18px;
+        }
+
+        .form-label{
+            font-weight:600;
+            color:#444;
+            margin-bottom:6px;
+        }
+
+        .form-control,
+        .form-select,
+        textarea{
+            border-radius:12px !important;
+            border:1px solid #ddd !important;
+            box-shadow:none !important;
+            padding:11px 14px !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus{
+            border-color:var(--amethyst) !important;
+        }
+
+        .info-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:16px;
+        }
+
+        .info-item{
+            background:var(--white);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:16px;
+        }
+
+        .info-item h6{
+            margin:0 0 8px;
+            color:var(--amethyst);
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .info-item p{
+            margin:0;
+            color:#555;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:14px;
+        }
+
+        .stat-box{
+            background:var(--white);
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:18px;
+            text-align:center;
+        }
+
+        .stat-box h3{
+            margin:0;
+            color:var(--amethyst);
+            font-size:28px;
+            font-weight:700;
+        }
+
+        .stat-box p{
+            margin:8px 0 0;
+            color:#666;
+            font-size:13px;
+        }
+
+        .security-list,
+        .activity-list{
+            display:grid;
+            gap:14px;
+        }
+
+        .security-item,
+        .activity-item{
+            background:var(--white);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:16px;
+        }
+
+        .security-item h6,
+        .activity-item h6{
+            margin:0 0 6px;
+            color:var(--amethyst);
+            font-size:15px;
+            font-weight:700;
+        }
+
+        .security-item p,
+        .activity-item p{
+            margin:0;
+            color:#555;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        .status-pill{
+            display:inline-block;
+            margin-top:8px;
+            background:#e8f5e9;
+            color:var(--success);
+            padding:6px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .save-wrap{
+            margin-top:20px;
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .upload-box{
+            border:2px dashed var(--border);
+            background:var(--white);
+            border-radius:16px;
+            padding:18px;
+            text-align:center;
+            color:#666;
+            font-size:14px;
+        }
+
+        .message-box{
+            margin-bottom:18px;
+            padding:12px 16px;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .success-box{
+            background:#e8f5e9;
+            color:#2e7d32;
+        }
+
+        @media(max-width:992px){
+            .profile-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:640px){
+            .info-grid,
+            .stats-grid{
+                grid-template-columns:1fr;
+            }
+
+            .profile-info h1{
+                font-size:28px;
+            }
+
+            .profile-header{
+                padding:24px;
+            }
+
+            .card-box{
+                padding:20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+    <div class="profile-header">
+        <div class="profile-main">
+            <div class="profile-avatar">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="Profile Photo">
+                {% else %}
+                    {{ user.username|first|upper }}
+                {% endif %}
+            </div>
+
+            <div class="profile-info">
+                <h1>{{ user.get_full_name|default:user.username }}</h1>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Member Since:</strong> {{ user.date_joined|date:"d M Y" }}</p>
+                <span class="badge-soft">Lostify Member</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <a href="#edit-profile-form" class="action-btn primary-btn">Edit Profile</a>
+            <a href="{% url 'settings' %}" class="action-btn secondary-btn">Account Settings</a>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+
+        <div class="left-col">
+
+            <div class="card-box" id="edit-profile-form">
+                <h3 class="card-title">Personal Information</h3>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message-box success-box">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" value="{{ user.email }}" readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" name="phone_number" value="{{ profile.phone_number|default:'' }}" placeholder="Enter phone number">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" name="location" value="{{ profile.location|default:'' }}" placeholder="Enter city / state">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control" name="bio" rows="4" placeholder="Write a short profile description...">{{ profile.bio|default:'' }}</textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Profile Photo</label>
+                            <div class="upload-box">
+                                Upload profile picture
+                                <input type="file" name="profile_image" class="form-control mt-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="save-wrap">
+                        <button type="submit" class="action-btn primary-btn">Save Profile</button>
+                        <button type="reset" class="action-btn secondary-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-box">
+                <h3 class="card-title">Account Overview</h3>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h6>Registered Email</h6>
+                        <p>{{ user.email }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <h6>Joined Date</h6>
+                        <p>{{ user.date_joined|date:"d M Y, h:i A" }}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <h6>Account Type</h6>
+                        <p>Standard User</p>
+                    </div>
+
+                    <div class="info-item">
+                        <h6>Verification Status</h6>
+                        <p>Email Verified</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right-col">
+
+            <div class="card-box">
+                <h3 class="card-title">Profile Statistics</h3>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h3>{{ lost_count|default:"0" }}</h3>
+                        <p>Lost Reports</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3>{{ found_count|default:"0" }}</h3>
+                        <p>Found Reports</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3>{{ matched_count|default:"0" }}</h3>
+                        <p>Matches</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3>{{ complaint_count|default:"0" }}</h3>
+                        <p>Support Requests</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3 class="card-title">Security Status</h3>
+
+                <div class="security-list">
+                    <div class="security-item">
+                        <h6>Password Protection</h6>
+                        <p>Your account password is active and protecting your account access.</p>
+                        <span class="status-pill">Protected</span>
+                    </div>
+
+                    <div class="security-item">
+                        <h6>Google Login</h6>
+                        <p>Google sign-in can be used if your account is linked through Google authentication.</p>
+                        <span class="status-pill">Available</span>
+                    </div>
+
+                    <div class="security-item">
+                        <h6>Recent Account Status</h6>
+                        <p>Your account is active and available for reporting, matching, and item tracking.</p>
+                        <span class="status-pill">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3 class="card-title">Recent Activity</h3>
+
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <h6>Profile Created</h6>
+                        <p>Your account was created on {{ user.date_joined|date:"d M Y" }}.</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <h6>Last Login</h6>
+                        <p>{{ user.last_login|date:"d M Y, h:i A"|default:"No recent login data" }}</p>
+                    </div>
+
+                    <div class="activity-item">
+                        <h6>Account Usage</h6>
+                        <p>You can use this profile page to manage your personal details and review account activity.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

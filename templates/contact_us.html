@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Lostify</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --amethyst:#7851A9;
+            --amethyst-dark:#5f3b87;
+            --lemon:#FFFACD;
+            --white:#ffffff;
+            --text:#333;
+            --border:#eadf9b;
+            --success:#2e7d32;
+        }
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            background:linear-gradient(135deg,var(--amethyst-dark),var(--amethyst));
+            min-height:100vh;
+            color:var(--text);
+        }
+
+        .page-wrap{
+            width:90%;
+            max-width:1200px;
+            margin:40px auto;
+        }
+
+        .hero{
+            background:rgba(255,250,205,0.97);
+            border-radius:24px;
+            padding:45px 30px;
+            text-align:center;
+            box-shadow:0 20px 50px rgba(0,0,0,0.22);
+            margin-bottom:30px;
+        }
+
+        .hero h1{
+            color:var(--amethyst);
+            font-size:42px;
+            font-weight:700;
+            margin-bottom:12px;
+        }
+
+        .hero p{
+            max-width:760px;
+            margin:0 auto;
+            font-size:16px;
+            line-height:1.7;
+            color:#555;
+        }
+
+        .section-title{
+            color:var(--white);
+            font-size:28px;
+            font-weight:700;
+            margin:28px 0 18px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:1.2fr 0.8fr;
+            gap:24px;
+        }
+
+        .card-box{
+            background:rgba(255,250,205,0.97);
+            border-radius:20px;
+            padding:28px;
+            box-shadow:0 15px 35px rgba(0,0,0,0.18);
+        }
+
+        .card-box h3{
+            color:var(--amethyst);
+            font-size:24px;
+            margin-bottom:10px;
+            font-weight:700;
+        }
+
+        .card-box p{
+            color:#555;
+            font-size:14px;
+            line-height:1.7;
+            margin-bottom:18px;
+        }
+
+        .form-control,
+        .form-select,
+        textarea{
+            border-radius:12px !important;
+            border:1px solid #ddd !important;
+            padding:12px 14px !important;
+            font-size:14px !important;
+            box-shadow:none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus{
+            border-color:var(--amethyst) !important;
+            box-shadow:0 0 0 0.2rem rgba(120,81,169,0.12) !important;
+        }
+
+        .send-btn{
+            background:var(--amethyst);
+            color:white;
+            border:none;
+            border-radius:30px;
+            padding:12px 28px;
+            font-weight:600;
+            transition:0.25s;
+        }
+
+        .send-btn:hover{
+            background:var(--amethyst-dark);
+        }
+
+        .success-box{
+            margin-top:18px;
+            background:#e8f5e9;
+            color:var(--success);
+            padding:12px 16px;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .info-list{
+            display:grid;
+            gap:16px;
+            margin-top:8px;
+        }
+
+        .info-item{
+            background:var(--white);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:16px 18px;
+        }
+
+        .info-item h5{
+            margin-bottom:6px;
+            color:var(--amethyst);
+            font-size:17px;
+            font-weight:700;
+        }
+
+        .info-item p{
+            margin:0;
+            color:#555;
+            font-size:14px;
+            line-height:1.6;
+        }
+
+        .mini-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:18px;
+        }
+
+        .mini-card{
+            background:rgba(255,250,205,0.97);
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.16);
+        }
+
+        .mini-card h4{
+            color:var(--amethyst);
+            margin-bottom:10px;
+            font-size:19px;
+            font-weight:700;
+        }
+
+        .mini-card p{
+            color:#555;
+            font-size:14px;
+            line-height:1.6;
+            margin:0;
+        }
+
+        .faq-wrap{
+            display:grid;
+            gap:14px;
+        }
+
+        .faq-item{
+            background:rgba(255,250,205,0.97);
+            border-radius:16px;
+            overflow:hidden;
+            box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .faq-question{
+            width:100%;
+            background:none;
+            border:none;
+            text-align:left;
+            padding:18px 20px;
+            font-size:16px;
+            font-weight:600;
+            color:var(--amethyst);
+            cursor:pointer;
+        }
+
+        .faq-answer{
+            display:none;
+            padding:0 20px 18px;
+            font-size:14px;
+            color:#555;
+            line-height:1.7;
+        }
+
+        .footer-note{
+            text-align:center;
+            color:white;
+            margin:30px 0 10px;
+            font-size:14px;
+            opacity:0.95;
+        }
+
+        @media(max-width:992px){
+            .grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:576px){
+            .hero h1{
+                font-size:32px;
+            }
+
+            .hero{
+                padding:32px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+    <div class="hero">
+        <h1>Contact Us</h1>
+        <p>
+            We are here to make your Lostify experience smooth and secure. Use the contact form to share
+            questions, suggestions, feedback, account issues, report concerns, or platform-related support requests.
+        </p>
+    </div>
+
+    <h2 class="section-title">Get in Touch</h2>
+    <div class="grid">
+        <div class="card-box">
+            <h3>Send a Message</h3>
+            <p>
+                Fill out the form below and share your message with the Lostify team.
+                This page is useful for general inquiries, technical issues, report concerns, complaints, or platform suggestions.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="full_name" placeholder="Full Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="phone_number" placeholder="Phone Number">
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-select" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="general_inquiry">General Inquiry</option>
+                            <option value="technical_issue">Technical Issue</option>
+                            <option value="account_support">Account Support</option>
+                            <option value="report_concern">Report Concern</option>
+                            <option value="feedback">Feedback / Suggestion</option>
+                            <option value="complaint">Complaint</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <textarea rows="6" class="form-control" name="message" placeholder="Write your message here..." required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="send-btn">Send Message</button>
+                    </div>
+                </div>
+            </form>
+
+            {% if success %}
+                <div class="success-box">{{ success }}</div>
+            {% endif %}
+        </div>
+
+        <div class="card-box">
+            <h3>Contact Information</h3>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <h5>Email Support</h5>
+                    <p>lostifysupport@gmail.com</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>Phone Support</h5>
+                    <p>+91 98765 43210</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>Working Hours</h5>
+                    <p>Monday to Saturday • 9:00 AM to 6:00 PM</p>
+                </div>
+
+                <div class="info-item">
+                    <h5>Office Address</h5>
+                    <p>Bangalore, Karnataka, India</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Why Contact Us</h2>
+    <div class="mini-grid">
+        <div class="mini-card">
+            <h4>Account Issues</h4>
+            <p>Reach out for login problems, OTP difficulties, registration issues, and account access concerns.</p>
+        </div>
+        <div class="mini-card">
+            <h4>Technical Support</h4>
+            <p>Get assistance if something is not working properly on the website or while submitting reports.</p>
+        </div>
+        <div class="mini-card">
+            <h4>Feedback & Suggestions</h4>
+            <p>Share ideas to improve the Lostify platform and make the user experience better.</p>
+        </div>
+        <div class="mini-card">
+            <h4>Report Clarification</h4>
+            <p>Ask questions related to lost item reports, found item details, or claim-related issues.</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-wrap">
+        <div class="faq-item">
+            <button class="faq-question">How soon will I get a response?</button>
+            <div class="faq-answer">
+                Response time depends on the type of request, but general inquiries are usually reviewed as quickly as possible.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can I contact Lostify for technical problems?</button>
+            <div class="faq-answer">
+                Yes. The contact page can be used to share technical issues, bugs, login problems, or website errors.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can I share feedback about the platform?</button>
+            <div class="faq-answer">
+                Yes. Feedback and suggestions are valuable for improving features, design, and user experience.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Can I ask about my lost or found item report here?</button>
+            <div class="faq-answer">
+                Yes. You can use the message section to mention concerns related to your submitted reports or claim activity.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        Lostify Contact Center • Built to support users, reports, and platform communication
+    </div>
+</div>
+
+<script>
+    const questions = document.querySelectorAll(".faq-question");
+
+    questions.forEach(button => {
+        button.addEventListener("click", () => {
+            const answer = button.nextElementSibling;
+            const isVisible = answer.style.display === "block";
+
+            document.querySelectorAll(".faq-answer").forEach(item => {
+                item.style.display = "none";
+            });
+
+            if (!isVisible) {
+                answer.style.display = "block";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

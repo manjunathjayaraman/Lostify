@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Items - Lostify</title>
+    <style>
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:#FFFACD;
+            margin:0;
+            padding:30px;
+        }
+
+        h1{
+            color:#7851A9;
+            margin-bottom:20px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:12px;
+            margin-bottom:20px;
+        }
+
+        .back-btn{
+            display:inline-block;
+            background:#7851A9;
+            color:white;
+            text-decoration:none;
+            padding:10px 18px;
+            border-radius:10px;
+            font-weight:600;
+        }
+
+        .back-btn:hover{
+            background:#633d92;
+        }
+
+        .search-form{
+            display:flex;
+            gap:10px;
+            margin-bottom:25px;
+            flex-wrap:wrap;
+        }
+
+        .search-box{
+            flex:1;
+            min-width:250px;
+            padding:12px 14px;
+            border:1px solid #d5d5d5;
+            border-radius:12px;
+            font-size:15px;
+            outline:none;
+            background:#fff;
+        }
+
+        .search-box:focus{
+            border-color:#7851A9;
+            box-shadow:0 0 0 3px rgba(120,81,169,0.12);
+        }
+
+        .search-btn{
+            background:#7851A9;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:12px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .search-btn:hover{
+            background:#633d92;
+        }
+
+        .card{
+            background:white;
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:16px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .status{
+            color:orange;
+            font-weight:700;
+        }
+
+        .claimed-status{
+            color:#c62828;
+            font-weight:700;
+            margin-top:12px;
+        }
+
+        .mine-btn{
+            margin-top:12px;
+            background:#7851A9;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .mine-btn:hover{
+            background:#633d92;
+        }
+
+        .mine-btn:disabled{
+            background:#b9a6cf;
+            cursor:not-allowed;
+        }
+
+        .popup-overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.35);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            z-index:9999;
+            opacity:0;
+            visibility:hidden;
+            transition:0.3s ease;
+        }
+
+        .popup-overlay.show{
+            opacity:1;
+            visibility:visible;
+        }
+
+        .popup-card{
+            background:white;
+            border-radius:20px;
+            padding:28px 24px;
+            width:90%;
+            max-width:420px;
+            text-align:center;
+            box-shadow:0 18px 50px rgba(0,0,0,0.2);
+            transform:scale(0.85);
+            transition:0.3s ease;
+        }
+
+        .popup-overlay.show .popup-card{
+            transform:scale(1);
+        }
+
+        .popup-icon{
+            width:70px;
+            height:70px;
+            margin:0 auto 14px;
+            border-radius:50%;
+            background:#e9f8ec;
+            color:#1f8b3d;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:34px;
+            font-weight:700;
+        }
+
+        .popup-title{
+            font-size:24px;
+            font-weight:700;
+            color:#7851A9;
+            margin-bottom:8px;
+        }
+
+        .popup-text{
+            color:#555;
+            line-height:1.6;
+            font-size:15px;
+        }
+
+        .popup-btn{
+            margin-top:18px;
+            background:#7851A9;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h1>Search Found Items</h1>
+        <a href="/" class="back-btn">Back to Home</a>
+    </div>
+
+    <form method="GET" class="search-form">
+        <input type="text" name="q" class="search-box" placeholder="Search by title, category, brand, model, color..." value="{{ query }}">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    {% for item in found_items %}
+        <div class="card">
+            <h3>{{ item.title }}</h3>
+            <p><b>Category:</b> {{ item.category }}</p>
+            <p><b>Brand:</b> {{ item.brand }}</p>
+            <p><b>Model:</b> {{ item.model }}</p>
+            <p><b>Color:</b> {{ item.color }}</p>
+            <p><b>Description:</b> {{ item.description }}</p>
+            <p><b>Found Place:</b> {{ item.found_place_text }}</p>
+
+            {% if item.status == 'unclaimed' %}
+                <p class="status">Unclaimed</p>
+
+                {% if user.is_authenticated %}
+                    <button class="mine-btn" onclick="claimItem('{{ item.id }}', '{{ item.title|escapejs }}')">It’s Mine</button>
+                {% else %}
+                    <button class="mine-btn" disabled>Login to Claim</button>
+                {% endif %}
+
+            {% elif item.status == 'matched' %}
+                <p class="claimed-status">Item claimed by someone else</p>
+
+            {% elif item.status == 'returned' %}
+                <p class="claimed-status">Item already returned</p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No found items available.</p>
+    {% endfor %}
+
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-card">
+            <div class="popup-icon">✓</div>
+            <div class="popup-title">Item Found!</div>
+            <div class="popup-text" id="popupMessage">
+                Congratulations. Your match request has been submitted successfully.
+            </div>
+            <button class="popup-btn" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(message) {
+            document.getElementById("popupMessage").innerText = message;
+            document.getElementById("successPopup").classList.add("show");
+        }
+
+        function closePopup() {
+            document.getElementById("successPopup").classList.remove("show");
+            window.location.reload();
+        }
+
+        function claimItem(foundItemId, foundTitle) {
+            const confirmed = confirm("Do you want to mark this found item as yours?");
+            if (!confirmed) return;
+
+            fetch(`/claim-found-item/${foundItemId}/`, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": getCookie("csrftoken")
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showPopup("Item found! Congratulations. Your request has been submitted successfully. Contact details will be shared after 1 day.");
+                } else {
+                    alert(data.error || "Something went wrong.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Something went wrong.");
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+
+</body>
+</html>

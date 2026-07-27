@@ -1,0 +1,412 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Settings" %} - Lostify</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --amethyst:#7851A9;
+            --amethyst-dark:#5f3b87;
+            --lemon:#FFFACD;
+            --white:#ffffff;
+            --text:#333;
+            --success:#2e7d32;
+            --error:#c62828;
+        }
+
+        *{
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            margin:0;
+            background:linear-gradient(135deg,var(--amethyst-dark),var(--amethyst));
+            min-height:100vh;
+            color:var(--text);
+        }
+
+        .page-wrap{
+            width:92%;
+            max-width:1100px;
+            margin:40px auto;
+        }
+
+        .hero{
+            background:rgba(255,250,205,0.97);
+            border-radius:24px;
+            padding:35px 30px;
+            box-shadow:0 20px 50px rgba(0,0,0,0.22);
+            margin-bottom:28px;
+            text-align:center;
+        }
+
+        .hero h1{
+            color:var(--amethyst);
+            font-size:38px;
+            font-weight:700;
+            margin-bottom:10px;
+        }
+
+        .hero p{
+            color:#555;
+            font-size:15px;
+            margin:0;
+        }
+
+        .settings-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:22px;
+        }
+
+        .settings-card{
+            background:rgba(255,250,205,0.97);
+            border-radius:20px;
+            padding:24px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .settings-card h3{
+            color:var(--amethyst);
+            font-size:22px;
+            font-weight:700;
+            margin-bottom:8px;
+        }
+
+        .settings-card p.section-note{
+            color:#666;
+            font-size:14px;
+            margin-bottom:18px;
+            line-height:1.6;
+        }
+
+        .form-label{
+            font-weight:600;
+            color:#444;
+            margin-bottom:6px;
+        }
+
+        .form-control,
+        .form-select{
+            border-radius:12px;
+            border:1px solid #ddd;
+            padding:11px 14px;
+            font-size:14px;
+            box-shadow:none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+            border-color:var(--amethyst);
+        }
+
+        .switch-row{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:16px;
+            padding:14px 0;
+            border-bottom:1px solid rgba(0,0,0,0.08);
+        }
+
+        .switch-row:last-child{
+            border-bottom:none;
+        }
+
+        .switch-text h6{
+            margin:0;
+            color:#333;
+            font-size:15px;
+            font-weight:600;
+        }
+
+        .switch-text p{
+            margin:4px 0 0;
+            color:#666;
+            font-size:13px;
+            line-height:1.5;
+        }
+
+        .form-check-input{
+            width:46px;
+            height:24px;
+            cursor:pointer;
+        }
+
+        .save-wrap{
+            margin-top:28px;
+            text-align:center;
+        }
+
+        .save-btn{
+            background:var(--amethyst);
+            color:white;
+            border:none;
+            border-radius:30px;
+            padding:14px 34px;
+            font-size:16px;
+            font-weight:600;
+            transition:0.25s;
+        }
+
+        .save-btn:hover{
+            background:var(--amethyst-dark);
+        }
+
+        .message-box{
+            margin-top:18px;
+            padding:12px 16px;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .success-box{
+            background:#e8f5e9;
+            color:var(--success);
+        }
+
+        .error-box{
+            background:#ffebee;
+            color:var(--error);
+        }
+
+        @media(max-width:900px){
+            .settings-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:576px){
+            .hero h1{
+                font-size:30px;
+            }
+
+            .hero{
+                padding:28px 20px;
+            }
+
+            .settings-card{
+                padding:20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+    <div class="hero">
+        <h1>{% trans "Settings" %}</h1>
+        <p>{% trans "Manage your account, security, privacy, notifications, and data preferences." %}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="settings-grid">
+
+            <div class="settings-card">
+                <h3>{% trans "Account Settings" %}</h3>
+                <p class="section-note">{% trans "View your account details used across the platform." %}</p>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Username" %}</label>
+                    <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Email Address" %}</label>
+                    <input type="email" class="form-control" value="{{ user.email }}" readonly>
+                </div>
+
+                <div class="mb-0">
+                    <label class="form-label">{% trans "Account Status" %}</label>
+                    <input type="text" class="form-control" value="{% trans 'Active' %}" readonly>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>{% trans "Change Password" %}</h3>
+                <p class="section-note">{% trans "Update your password securely." %}</p>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Current Password" %}</label>
+                    <input type="password" name="current_password" class="form-control" placeholder="{% trans 'Enter current password' %}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "New Password" %}</label>
+                    <input type="password" name="new_password" class="form-control" placeholder="{% trans 'Enter new password' %}">
+                </div>
+
+                <div class="mb-0">
+                    <label class="form-label">{% trans "Confirm New Password" %}</label>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="{% trans 'Confirm new password' %}">
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>{% trans "Notification Preferences" %}</h3>
+                <p class="section-note">{% trans "Choose which updates you want to receive from Lostify." %}</p>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Email Notifications" %}</h6>
+                        <p>{% trans "Receive important updates through email." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="email_notifications" {% if prefs.email_notifications %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Match Alerts" %}</h6>
+                        <p>{% trans "Get notified when there is a possible lost and found match." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="match_alerts" {% if prefs.match_alerts %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Claim Updates" %}</h6>
+                        <p>{% trans "Receive updates on claims and report status changes." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="claim_updates" {% if prefs.claim_updates %}checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>{% trans "Privacy Controls" %}</h3>
+                <p class="section-note">{% trans "Control what information is visible and how your data is used." %}</p>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Show Contact After Match" %}</h6>
+                        <p>{% trans "Display contact details only when a valid item match happens." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="contact_after_match" {% if prefs.contact_after_match %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Hide Sensitive Details" %}</h6>
+                        <p>{% trans "Keep personal information limited in public report views." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="hide_sensitive_details" {% if prefs.hide_sensitive_details %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Allow Activity Logging" %}</h6>
+                        <p>{% trans "Store account activity to improve security and tracking." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="activity_logging" {% if prefs.activity_logging %}checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>{% trans "Security Options" %}</h3>
+                <p class="section-note">{% trans "Strengthen your account with extra security protections." %}</p>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "OTP Verification" %}</h6>
+                        <p>{% trans "Keep OTP verification enabled for account safety." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="otp_verification" {% if prefs.otp_verification %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Google Login Access" %}</h6>
+                        <p>{% trans "Allow sign in through connected Google account." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="google_login_access" {% if prefs.google_login_access %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Login Alerts" %}</h6>
+                        <p>{% trans "Receive alerts when your account is accessed from a new session." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="login_alerts" {% if prefs.login_alerts %}checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3>{% trans "Data Controls" %}</h3>
+                <p class="section-note">{% trans "Manage how your data is stored and used inside the platform." %}</p>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Save Search History" %}</h6>
+                        <p>{% trans "Store search history for faster access and recommendations." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="save_search_history" {% if prefs.save_search_history %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Save Report Drafts" %}</h6>
+                        <p>{% trans "Keep unfinished lost or found reports as drafts." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="save_report_drafts" {% if prefs.save_report_drafts %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <div class="switch-row">
+                    <div class="switch-text">
+                        <h6>{% trans "Personalized Suggestions" %}</h6>
+                        <p>{% trans "Use activity data to improve item suggestions and matching relevance." %}</p>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="personalized_suggestions" {% if prefs.personalized_suggestions %}checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="save-wrap">
+            <button type="submit" class="save-btn">{% trans "Save Changes" %}</button>
+
+            {% if success %}
+                <div class="message-box success-box" style="display:block;">{{ success }}</div>
+            {% endif %}
+
+            {% if error %}
+                <div class="message-box error-box">{{ error }}</div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

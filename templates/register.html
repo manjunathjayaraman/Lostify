@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Lostify</title>
+
+    <style>
+        :root{
+            --amethyst:#9966cc;
+            --amethyst-dark:#6a3dad;
+            --lemon:#fffacd;
+            --error:#c62828;
+            --success:#2e7d32;
+        }
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:linear-gradient(135deg,#6a3dad,#9966cc);
+            padding:20px;
+        }
+
+        .card{
+            width:100%;
+            max-width:420px;
+            background:rgba(255,250,205,0.96);
+            padding:40px;
+            border-radius:18px;
+            box-shadow:0 25px 60px rgba(0,0,0,0.3);
+            text-align:center;
+            animation:fadeIn .8s ease;
+        }
+
+        @keyframes fadeIn{
+            from{opacity:0; transform:translateY(15px);}
+            to{opacity:1; transform:translateY(0);}
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            color:var(--amethyst-dark);
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            color:#444;
+            font-size:14px;
+            margin-bottom:25px;
+        }
+
+        form{
+            margin-top:10px;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border-radius:10px;
+            border:1px solid #ddd;
+            font-size:14px;
+            outline:none;
+            background:#fff;
+        }
+
+        input:focus{
+            border-color:var(--amethyst);
+        }
+
+        .register-btn{
+            width:100%;
+            padding:12px;
+            margin-top:12px;
+            border:none;
+            border-radius:10px;
+            background:var(--amethyst);
+            color:white;
+            font-size:15px;
+            cursor:pointer;
+            transition:0.25s;
+        }
+
+        .register-btn:hover{
+            background:var(--amethyst-dark);
+        }
+
+        .login-text{
+            margin-top:18px;
+            font-size:14px;
+            color:#444;
+        }
+
+        .login-text a{
+            color:var(--amethyst-dark);
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .login-text a:hover{
+            text-decoration:underline;
+        }
+
+        .message{
+            margin-top:14px;
+            font-size:14px;
+            padding:10px 12px;
+            border-radius:10px;
+        }
+
+        .error-message{
+            color:var(--error);
+            background:#ffebee;
+        }
+
+        .success-message{
+            color:var(--success);
+            background:#e8f5e9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="logo">Create Account</div>
+    <div class="subtitle">Join Lostify and get started</div>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="fullname" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Gmail Address" required pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" title="Please enter a valid Gmail address">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+
+        <button type="submit" class="register-btn">Create Account</button>
+    </form>
+
+    {% if error %}
+        <div class="message error-message">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+        <div class="message success-message">{{ success }}</div>
+    {% endif %}
+
+    <div class="login-text">
+        Already have an account? <a href="/login/">Login</a>
+    </div>
+</div>
+
+</body>
+</html>
