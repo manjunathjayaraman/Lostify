@@ -14,39 +14,23 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
-    "django-insecure-change-this-in-production"
+    "7r(_fz05a@05wqvw^cnb1o%a#o%i7)8@n79*1tx$m^bsxsfxzu"
 )
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
-    "127.0.0.1,localhost"
+    "127.0.0.1,localhost,.onrender.com"
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CSRF_TRUSTED_ORIGINS",
-        ""
+        "https://*.onrender.com"
     ).split(",")
     if origin.strip()
-]
-
-# =====================================================
-# APPLICATIONS
-# =====================================================
-
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "django.contrib.sites",
-
-    "main",
 ]
 
 # =====================================================
