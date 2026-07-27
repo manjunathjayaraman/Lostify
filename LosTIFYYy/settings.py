@@ -14,15 +14,18 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
-    "7r(_fz05a@05wqvw^cnb1o%a#o%i7)8@n79*1tx$m^bsxsfxzu"
+    "django-insecure-change-this"
 )
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "127.0.0.1,localhost,.onrender.com"
-).split(",")
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost,.onrender.com"
+    ).split(",")
+]
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
@@ -30,7 +33,22 @@ CSRF_TRUSTED_ORIGINS = [
         "CSRF_TRUSTED_ORIGINS",
         "https://*.onrender.com"
     ).split(",")
-    if origin.strip()
+]
+
+# =====================================================
+# INSTALLED APPS
+# =====================================================
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
+
+    "main",
 ]
 
 # =====================================================
@@ -39,7 +57,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -60,9 +77,7 @@ ROOT_URLCONF = "LosTIFYYy.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / "templates",
-        ],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -135,7 +150,7 @@ USE_TZ = True
 # STATIC FILES
 # =====================================================
 
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -150,7 +165,7 @@ STORAGES = {
 }
 
 # =====================================================
-# MEDIA FILES
+# MEDIA
 # =====================================================
 
 MEDIA_URL = "/media/"
@@ -168,7 +183,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # =====================================================
 
 LOGIN_URL = "/login/"
+
 LOGIN_REDIRECT_URL = "/"
+
 LOGOUT_REDIRECT_URL = "/"
 
 SITE_ID = 1
@@ -184,8 +201,6 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
-
-EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 
@@ -213,15 +228,13 @@ CSRF_COOKIE_SECURE = not DEBUG
 
 SECURE_SSL_REDIRECT = not DEBUG
 
-SECURE_BROWSER_XSS_FILTER = True
-
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-X_FRAME_OPTIONS = "DENY"
-
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 USE_X_FORWARDED_HOST = True
+
+X_FRAME_OPTIONS = "DENY"
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
